@@ -5,7 +5,7 @@ import debounce from 'lodash.debounce';
 
 export default function Index() {
 
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState([{nameid: 0, jname: '', description: '', type: '', slot: ''}]);
   const [descriptionValue, setDescriptionValue] = useState('');
   const [nameValue, setNameValue] = useState('');
   const [typeValue, setTypeValue] = useState('');
