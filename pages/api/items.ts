@@ -29,7 +29,13 @@ export default async function handle(req, res) {
     `;
 
   if (description) {
-    query += `AND regexp_replace(unaccent(description), '<([^>]+)>', '', 'ig') ILIKE unaccent('%${description}%') `;
+    let words = description.split('&&');
+    console.log('words', words);
+    for (let i = 0; i < words.length; i++) {
+      let trimmed = words[i].trim();
+      query += `AND regexp_replace(unaccent(description), '<([^>]+)>', '', 'ig') ILIKE unaccent('%${trimmed}%') `;
+    }
+    
   }
 
   if (name) {
@@ -48,6 +54,8 @@ export default async function handle(req, res) {
   query += `
     AND (description NOT IN ('...', '') AND description IS NOT NULL)
   `;
+
+  console.log('query', query);
 
   const items = await prisma.$queryRawUnsafe(query);
 
