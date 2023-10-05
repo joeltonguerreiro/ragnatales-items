@@ -33,8 +33,17 @@ export default async function handle(req, res) {
     console.log('words', words);
     for (let i = 0; i < words.length; i++) {
       let trimmed = words[i].trim();
-      query += `AND regexp_replace(unaccent(description), '<([^>]+)>', '', 'ig') ILIKE unaccent('%${trimmed}%') `;
+
+      if (trimmed.includes('!')) {
+        query += `AND regexp_replace(unaccent(description), '<([^>]+)>', '', 'ig') NOT ILIKE unaccent('%${trimmed}%') `;
+      } else {
+        query += `AND regexp_replace(unaccent(description), '<([^>]+)>', '', 'ig') ILIKE unaccent('%${trimmed}%') `;
+      }
+
+      
     }
+
+    )
     
   }
 
