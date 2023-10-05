@@ -10,7 +10,16 @@ export default async function handle(req, res) {
   let slot = req.query.slot;
 
   if (description == '' && name == '' && type == '' && slot == '') {
-    res.json({ items: [] });
+    let query = `
+        SELECT *
+        FROM items
+        WHERE (description NOT IN ('...', '') AND description IS NOT NULL)
+        ORDER BY jname ASC
+        LIMIT 20
+        
+    `;
+    const items = await prisma.$queryRawUnsafe(query);
+    res.json({ items: items });
   }
 
   let query = `
