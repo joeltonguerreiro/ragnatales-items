@@ -2,10 +2,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import debounce from 'lodash.debounce';
 
+type Item = {
+  nameid: number, 
+    jname: string, 
+    description: string, 
+    type: string, slot: string
+};
 
 export default function Index() {
 
-  const [items, setItems] = useState([{nameid: 0, jname: '', description: '', type: '', slot: ''}]);
+  const [items, setItems] = useState([] as Item[]);
   const [descriptionValue, setDescriptionValue] = useState('');
   const [nameValue, setNameValue] = useState('');
   const [typeValue, setTypeValue] = useState('');
@@ -74,7 +80,7 @@ export default function Index() {
   //Handle the error state
   // if (error) return <div>Failed to load</div>;
   // //Handle the loading state
-  if (!items) return <div>Loading...</div>;
+  if (!items) return <div>No items to show</div>;
   // console.log('length', data.items.length);
 
   //Handle the ready state and display the result contained in the data object mapped to the structure of the json file
@@ -123,13 +129,13 @@ export default function Index() {
         <div style={{width: '100%', margin: '50px 0', display: 'flex', justifyContent: 'center'}}>
             <div style={{width: '400px'}}>
                 <div>
-                    Name: <input type="text" onChange={debouncedChangeName} style={{width: '100%', marginBottom: '15px'}} /> 
+                    Nome: <input type="text" onChange={debouncedChangeName} style={{width: '100%', marginBottom: '15px'}} /> 
                 </div>
                 <div>
-                    Type: <input type="text" onChange={debouncedChangeType} style={{width: '100%', marginBottom: '15px'}} />
+                    Tipo: <input type="text" onChange={debouncedChangeType} style={{width: '100%', marginBottom: '15px'}} />
                 </div>
                 <div>
-                    Description: <input type="text" onChange={debouncedChangeDescription} style={{width: '100%', marginBottom: '15px'}} /> 
+                    Descrição: <input type="text" onChange={debouncedChangeDescription} style={{width: '100%', marginBottom: '15px'}} /> 
                 </div>
 
                 <div>
@@ -147,6 +153,7 @@ export default function Index() {
             <div style={{ marginBottom: '15px'}}>
                 <a href={`https://ragnatales.com.br/db/items/${item.nameid}`} target='_blank'>{item.jname} [{item.slot}] - {item.nameid}</a>
             </div>
+            <label htmlFor="description">Descrição:</label>
             <div dangerouslySetInnerHTML={{ __html: item?.description }}></div>
           </li>
         ))}

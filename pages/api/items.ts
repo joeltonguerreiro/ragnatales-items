@@ -9,6 +9,10 @@ export default async function handle(req, res) {
   let type = req.query.type;
   let slot = req.query.slot;
 
+  if (description == '' && '' == name && '' == type && '' == slot) {
+    res.json({ items: [] });
+  }
+
   let query = `
         SELECT *
         FROM items
@@ -16,7 +20,7 @@ export default async function handle(req, res) {
     `;
 
   if (description) {
-    query += `AND unaccent(description) ILIKE unaccent('%${description}%') `;
+    query += `AND regexp_replace(unaccent(description), '<([^>]+)>', '', 'ig') ILIKE unaccent('%${description}%') `;
   }
 
   if (name) {
