@@ -9,7 +9,7 @@ export default async function handle(req, res) {
   let type = req.query.type;
   let slot = req.query.slot;
 
-  if (description == '' && '' == name && '' == type && '' == slot) {
+  if (description == '' && name == '' && type == '' && slot == '') {
     res.json({ items: [] });
   }
 
