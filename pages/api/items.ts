@@ -35,6 +35,7 @@ export default async function handle(req, res) {
       let trimmed = words[i].trim();
 
       if (trimmed.includes('!')) {
+        trimmed = trimmed.replace('!', '');
         query += `AND regexp_replace(unaccent(description), '<([^>]+)>', '', 'ig') NOT ILIKE unaccent('%${trimmed}%') `;
       } else {
         query += `AND regexp_replace(unaccent(description), '<([^>]+)>', '', 'ig') ILIKE unaccent('%${trimmed}%') `;
@@ -42,8 +43,6 @@ export default async function handle(req, res) {
 
       
     }
-
-    )
     
   }
 
