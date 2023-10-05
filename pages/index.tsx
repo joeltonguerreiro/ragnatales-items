@@ -1,18 +1,11 @@
 //useSWR allows the use of SWR inside function components
-import { useMemo, useState } from 'react';
-import useSWR from 'swr';
+import { useEffect, useMemo, useState } from 'react';
 import debounce from 'lodash.debounce';
-
-//Write a fetcher function to wrap the native fetch function and return the result of a call to url in json format
-const fetcher = (url) => fetch(url).then((res) => res.json());
-
 
 
 export default function Index() {
-  //Set up SWR to run the fetcher function when calling "/api/staticdata"
-  //There are 3 possible states: (1) loading when data is null (2) ready when the data is returned (3) error when there was an error fetching the data
-  const { data, error } = useSWR('/api/staticdata', fetcher);
 
+  const [items, setItems] = useState([]);
   const [descriptionValue, setDescriptionValue] = useState('');
   const [nameValue, setNameValue] = useState('');
   const [typeValue, setTypeValue] = useState('');
@@ -54,49 +47,75 @@ export default function Index() {
     [slotValue]
   );
 
-  const removeAccents = (str) => { return str .toLowerCase() .normalize("NFD") .replace(/[\u0300-\u036f]/g, ""); };
+  const handleFilter = async (name: string, description: string, type: string, slot: string) => {
+    try {
+      let params = new URLSearchParams({ name: name, description: description, type: type, slot: slot });
+
+      const response = await fetch(`/api/items?`+params);
+
+      if (response.ok) {
+        const data = await response.json();
+        setItems(data.items);
+        // Handle the filtered product data here
+        console.log("Filtered product:", data);
+      } else {
+        // Handle errors
+        console.error("Error filtering products:", response.status);
+      }
+    } catch (error) {
+      console.error("Error filtering products:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleFilter(nameValue, descriptionValue, typeValue, slotValue);
+  }, [nameValue, descriptionValue, typeValue, slotValue]);
 
   //Handle the error state
-  if (error) return <div>Failed to load</div>;
-  //Handle the loading state
-  if (!data) return <div>Loading...</div>;
+  // if (error) return <div>Failed to load</div>;
+  // //Handle the loading state
+  if (!items) return <div>Loading...</div>;
+  // console.log('length', data.items.length);
+
   //Handle the ready state and display the result contained in the data object mapped to the structure of the json file
 
-  let items = JSON.parse(data);
+  // let items = JSON.parse(data);
 
-  items = items.filter((item) => {
+  // console.log(props.items);
+
+  // let filtered = props.items.filter((item) => {
     
-    let shouldShow = (item.data.description != '...' && 
-        item.data.description != '' && 
-        item.data.description != null
-    );
+  //   let shouldShow = (item.description != '...' && 
+  //       item.description != '' && 
+  //       item.description != null
+  //   );
 
-    if (descriptionValue != '') {
-        const words = removeAccents(descriptionValue).split('&&');
+  //   if (descriptionValue != '') {
+  //       const words = removeAccents(descriptionValue).split('&&');
 
-        shouldShow = words.every((word) =>
-            removeAccents(item.data.description)
-                .replace( /(<([^>]+)>)/ig, '')
-                .toLowerCase()
-                .includes(removeAccents(word.trim()))
-        );
-    }
+  //       shouldShow = words.every((word) =>
+  //           removeAccents(item.description)
+  //               .replace( /(<([^>]+)>)/ig, '')
+  //               .toLowerCase()
+  //               .includes(removeAccents(word.trim()))
+  //       );
+  //   }
 
-    if (nameValue != '') {
-        shouldShow = shouldShow && removeAccents(item.jname).toLowerCase().includes(removeAccents(nameValue));
-    }
+  //   if (nameValue != '') {
+  //       shouldShow = shouldShow && removeAccents(item.jname).toLowerCase().includes(removeAccents(nameValue));
+  //   }
 
-    if (typeValue != '') {
-        shouldShow = shouldShow && item.type == typeValue;
-    }
+  //   if (typeValue != '') {
+  //       shouldShow = shouldShow && item.type == typeValue;
+  //   }
 
-    if (slotValue != '') {
-        shouldShow = shouldShow && item.slot == slotValue;
-    }
+  //   if (slotValue != '') {
+  //       shouldShow = shouldShow && item.slot == slotValue;
+  //   }
 
-    return shouldShow;
+  //   return shouldShow;
 
-  });
+  // });
 
   return (
     <div style={{ maxWidth: '1024px', margin: '0 auto' }}>
@@ -124,11 +143,11 @@ export default function Index() {
 
       <ul style={{ listStyle: 'none', padding: '0' }}>
         {items.map((item) => (
-          <li key={item.nameid} style={{  margin: '15px 0', paddingBottom: '15px', borderBottom: '1px solid #ccc' }}>
+          <li key={item?.nameid} style={{  margin: '15px 0', paddingBottom: '15px', borderBottom: '1px solid #ccc' }}>
             <div style={{ marginBottom: '15px'}}>
                 <a href={`https://ragnatales.com.br/db/items/${item.nameid}`} target='_blank'>{item.jname} [{item.slot}] - {item.nameid}</a>
             </div>
-            <div dangerouslySetInnerHTML={{ __html: item.data.description }}></div>
+            <div dangerouslySetInnerHTML={{ __html: item?.description }}></div>
           </li>
         ))}
       </ul>

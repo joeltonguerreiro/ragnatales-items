@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model items {
+  nameid        Int     @id
+  name          String? @db.VarChar(255)
+  jname         String? @db.VarChar(255)
+  value_buy     Int?
+  value_sell    Int?
+  type          Int?
+  subtype       Int?
+  sex           Int?
+  equip         Int?
+  weight        Int?
+  atk           Int?
+  def           Int?
+  range         Int?
+  slot          Int?
+  view_sprite   Int?
+  elv           Int?
+  wlv           Int?
+  view_id       Int?
+  matk          Int?
+  elvmax        Int?
+  delay         Int?
+  flag_trade    Int?
+  flag_refine   Int?
+  flag_buystore Int?
+  icon          String? @db.VarChar(255)
+  collection    String? @db.VarChar(255)
+  description   String?
+}
