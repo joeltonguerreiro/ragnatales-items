@@ -16,6 +16,7 @@ export default function Index() {
   const [nameValue, setNameValue] = useState('');
   const [typeValue, setTypeValue] = useState('');
   const [slotValue, setSlotValue] = useState('');
+  const [subtypeValue, setSubtypeValue] = useState('');
 
   const handleChangeName = (e) => {
     setNameValue(e.target.value);
@@ -31,6 +32,10 @@ export default function Index() {
 
   const handleChangeDescription = (e) => {
     setDescriptionValue(e.target.value);
+  }
+
+  const handleChangeSubType = (e) => {
+    setSubtypeValue(e.target.value);
   }
 
   const debouncedChangeName = useMemo(
@@ -53,9 +58,20 @@ export default function Index() {
     [slotValue]
   );
 
-  const handleFilter = async (name: string, description: string, type: string, slot: string) => {
+  const debouncedChangeSubType = useMemo(
+    () => debounce(handleChangeSubType, 500),
+    [subtypeValue]
+  )
+
+  const handleFilter = async (name: string, description: string, type: string, slot: string, subType: string) => {
     try {
-      let params = new URLSearchParams({ name: name, description: description, type: type, slot: slot });
+      let params = new URLSearchParams({ 
+        name: name, 
+        description: description, 
+        type: type, 
+        slot: slot, 
+        subtype: subType
+      });
 
       const response = await fetch(`/api/items?`+params);
 
@@ -74,8 +90,8 @@ export default function Index() {
   };
 
   useEffect(() => {
-    handleFilter(nameValue, descriptionValue, typeValue, slotValue);
-  }, [nameValue, descriptionValue, typeValue, slotValue]);
+    handleFilter(nameValue, descriptionValue, typeValue, slotValue, subtypeValue);
+  }, [nameValue, descriptionValue, typeValue, slotValue, subtypeValue]);
 
   //Handle the error state
   // if (error) return <div>Failed to load</div>;
@@ -143,6 +159,19 @@ export default function Index() {
                         <option value="10">Munições</option>
                     </select>
                 </div>
+
+              <div>
+                {typeValue == '5' && 
+                    <div>
+                      <select name="type" id="" onChange={debouncedChangeSubType} style={{width: '100%', marginBottom: '15px'}}>
+                        <option value="all">Todos</option>
+                        <option value="head">Cabeça</option>
+                        <option value="body">Corpo</option>
+                    </select>
+                    </div>
+                }
+              </div>
+
                 <div>
                     Descrição: <textarea name="description" onChange={debouncedChangeDescription} style={{width: '100%', marginBottom: '15px'}} /> 
                 </div>

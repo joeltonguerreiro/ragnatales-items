@@ -8,6 +8,7 @@ export default async function handle(req, res) {
   let description = req.query.description;
   let type = req.query.type;
   let slot = req.query.slot;
+  let subtype = req.query.subtype;
 
   if (description == '' && name == '' && type == '' && slot == '') {
     let query = `
@@ -52,6 +53,23 @@ export default async function handle(req, res) {
 
   if (type && type != 'all') {
     query += `AND type = ${type} `;
+
+    if (subtype && subtype != 'all') {
+      if (subtype == 'head') {
+        query += `AND regexp_replace(unaccent(description), '<([^>]+)>', '', 'ig') ILIKE unaccent('%Classe: Equipamento para a cabeça%') `;
+      } else if (subtype == 'body') {
+
+        let conditions = ['Classe: Armadura', 'Classe: Capa', 'Classe: Calçado', 'Classe: Acessório']
+        let queryString = `regexp_replace(unaccent(description), '<([^>]+)>', '', 'ig') ILIKE unaccent('%$?%')`;
+
+        for (let i = 0; i < conditions.length; i++) {
+          queryString += ` OR ` + queryString.replace('$?', conditions[i]);
+        }
+
+        query += `AND (${queryString}) `;
+      }
+      
+    }
   }
 
   if (slot && slot != 'all') {
