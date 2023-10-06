@@ -132,14 +132,31 @@ export default function Index() {
                     Nome: <input type="text" onChange={debouncedChangeName} style={{width: '100%', marginBottom: '15px'}} /> 
                 </div>
                 <div>
-                    Tipo: <input type="text" onChange={debouncedChangeType} style={{width: '100%', marginBottom: '15px'}} />
+                    Tipo: 
+                    <select name="type" id="" onChange={debouncedChangeType} style={{width: '100%', marginBottom: '15px'}}>
+                        <option value="all">Todos</option>
+                        <option value="4">Armas</option>
+                        <option value="5">Equipamentos</option>
+                        <option value="6">Cartas</option>
+                        <option value="18">Consumiveis</option>
+                        <option value="8">Pet</option>
+                        <option value="10">Munições</option>
+                    </select>
                 </div>
                 <div>
-                    Descrição: <input type="text" onChange={debouncedChangeDescription} style={{width: '100%', marginBottom: '15px'}} /> 
+                    Descrição: <textarea name="description" onChange={debouncedChangeDescription} style={{width: '100%', marginBottom: '15px'}} /> 
                 </div>
 
                 <div>
-                    Slots: <input type="text" onChange={debouncedChangeSlot} style={{width: '100%', marginBottom: '15px'}} />
+                    Slots: 
+                    <select name="type" id="" onChange={debouncedChangeSlot} style={{width: '100%', marginBottom: '15px'}}>
+                        <option value="all">Todos</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
                 </div>
             </div>
         </div>
