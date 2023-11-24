@@ -11,6 +11,12 @@ type Item = {
 
 export default function Index() {
 
+  // return (
+  //   <div className="p-10">
+  //     <button className="btn btn-primary">Button</button>
+  //   </div>
+  // )
+
   const [items, setItems] = useState([] as Item[]);
   const [descriptionValue, setDescriptionValue] = useState('');
   const [nameValue, setNameValue] = useState('');
@@ -140,16 +146,19 @@ export default function Index() {
   // });
 
   return (
-    <div style={{ maxWidth: '1024px', margin: '0 auto' }}>
+    <div className="container mx-auto">
 
-        <div style={{width: '100%', margin: '50px 0', display: 'flex', justifyContent: 'center'}}>
-            <div style={{width: '400px'}}>
-                <div>
-                    Nome: <input type="text" onChange={debouncedChangeName} style={{width: '100%', marginBottom: '15px'}} /> 
+        <div className="flex justify-center text-3xl font-bold py-10">Ragnatales Items Search</div>
+
+        <div className="flex justify-center">
+            <div className='w-1/3'>
+                <div className="form-control">
+                  <div className="label">Nome:</div>
+                    <input type="text" className="input input-bordered w-full max-w-lg" onChange={debouncedChangeName} /> 
                 </div>
-                <div>
-                    Tipo: 
-                    <select name="type" id="" onChange={debouncedChangeType} style={{width: '100%', marginBottom: '15px'}}>
+                <div className="form-control">
+                    <div className="label">Tipo:</div> 
+                    <select name="type" id="" className="select select-bordered w-full max-w-lg" onChange={debouncedChangeType}>
                         <option value="all">Todos</option>
                         <option value="4">Armas</option>
                         <option value="5">Equipamentos</option>
@@ -162,8 +171,9 @@ export default function Index() {
 
               <div>
                 {typeValue == '5' && 
-                    <div>
-                      <select name="type" id="" onChange={debouncedChangeSubType} style={{width: '100%', marginBottom: '15px'}}>
+                    <div className="form-control">
+                      <div className="label">SubTipo:</div>
+                      <select name="type" id="" className="select select-bordered w-full max-w-lg" onChange={debouncedChangeSubType}>
                         <option value="all">Todos</option>
                         <option value="head">Cabeça</option>
                         <option value="body">Corpo</option>
@@ -172,13 +182,14 @@ export default function Index() {
                 }
               </div>
 
-                <div>
-                    Descrição: <textarea name="description" onChange={debouncedChangeDescription} style={{width: '100%', marginBottom: '15px'}} /> 
+                <div className="form-control">
+                    <div className="label">Descricão:</div>
+                    <textarea name="description" className="textarea textarea-bordered w-full max-w-lg" onChange={debouncedChangeDescription} /> 
                 </div>
 
-                <div>
-                    Slots: 
-                    <select name="type" id="" onChange={debouncedChangeSlot} style={{width: '100%', marginBottom: '15px'}}>
+                <div className="form-control">
+                    <div className="label">Slot:</div>
+                    <select name="type" id="" className="select select-bordered w-full max-w-lg" onChange={debouncedChangeSlot}>
                         <option value="all">Todos</option>
                         <option value="0">0</option>
                         <option value="1">1</option>
@@ -190,20 +201,30 @@ export default function Index() {
             </div>
         </div>
 
-        <div>Total: ({items.length})</div>
+        <div className="flex justify-center my-10 pb-10">
+          Total: ({items.length})
+        </div>
 
 
-      <ul style={{ listStyle: 'none', padding: '0' }}>
-        {items.map((item) => (
-          <li key={item?.nameid} style={{  margin: '15px 0', paddingBottom: '15px', borderBottom: '1px solid #ccc' }}>
-            <div style={{ marginBottom: '15px'}}>
-                <a href={`https://ragnatales.com.br/db/items/${item.nameid}`} target='_blank'>{item.jname} [{item.slot}] - {item.nameid}</a>
-            </div>
-            <label htmlFor="description">Descrição:</label>
-            <div dangerouslySetInnerHTML={{ __html: item?.description }}></div>
-          </li>
-        ))}
-      </ul>
+        <ul className="list-none">
+          {items.length && items.map((item) => (
+            <li key={item?.nameid} className="pb-8 flex justify-center">
+              <div className="card card-bordered w-1/2 bg-gray-200 text-base-content">
+                <div className="card-body">
+                  <div className="card-title">
+                      <a href={`https://ragnatales.com.br/db/items/${item.nameid}`} target='_blank'>{item.jname} [{item.slot}] - {item.nameid}</a>
+                  </div>
+
+                  <div>
+                    <label htmlFor="description">Descrição:</label>
+                  </div>
+
+                  <div dangerouslySetInnerHTML={{ __html: item?.description }}></div>
+                </div>
+              </div>
+            </li>
+          )) || <div className="flex justify-center text-3xl pb-10">Nenhum item encontrado</div>}
+        </ul>
     </div>
   );
 }
